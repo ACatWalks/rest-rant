@@ -22,8 +22,8 @@ REST-Rant is an app where users can review restaurants.
 
 Each place will include:
 
-*name
-*city
-*state
-*cuisine
-*picture
+1. name
+2. city
+3. state
+4. cuisine
+5. picture
