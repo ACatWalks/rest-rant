@@ -2,7 +2,7 @@
 
 REST-Rant is an app where users can review restaurants.
 
-Here are the various routes a user can take on Rest-Rant.
+## Routes
 
 | Method      | Path                    | Purpose                  |
 |:------------|:-----------------------:|-------------------------:|
@@ -17,3 +17,12 @@ Here are the various routes a user can take on Rest-Rant.
 | POST        | /places/:id/rant        | Create rant about place  |
 | DELETE      | /places/:id/rant/:rantId| Delete rant about place  |
 | GET         |       *                 |  404 page                |
+
+## Database
+
+Each place will include:
+-name
+-city
+-state
+-cuisine
+-picture
