@@ -6,6 +6,7 @@ function home(){
         <Def>
             <main>
                 <h1>Home</h1>
+                <button className="btn-primary">Places Page</button>
             </main>
         </Def>
     )

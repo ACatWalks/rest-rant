@@ -7,7 +7,8 @@ const app = express();
 
 //Middleware
 app.set('view engine', 'jsx');
-app.engine('jsx', require('express-react-views').createEngine())
+app.engine('jsx', require('express-react-views').createEngine());
+app.use(express.static('public'));
 
 app.use('/places', require('./controllers/places'));
 
