@@ -1,32 +1,36 @@
 const React = require('react');
 const Def = require('../default');
 
-function edit_form(data){
+function EditForm({ place, id }){
     return (
         <Def>
             <main>
                 <h1>Edit Place</h1>
-                <form method="POST" action={`/places/${data.id}?_method=PUT`}>
+                <form method="POST" action={`/places/${id}/edit?_method=PUT`}>
                     <div className='row'>
-                    <div className='form-group col-sm-6'>
+                    <div className='form-group col-sm-6 col-md-4 col-lg-3'>
                         <label htmlFor='name'>Place Name</label>
-                        <input className="form-control" name="name" id="name" defaultValue={data.place.name} required />
+                        <input className="form-control" name="name" id="name" defaultValue={place.name} required />
                     </div>
-                    <div className='form-group col-sm-6'>
+                    <div className='form-group col-sm-6 col-md-4 col-lg-3'>
                         <label htmlFor='pic'>Place Picture</label>
                         <input className='form-control' id="pic" name="pic" />
                     </div>
-                    <div className='form-group col-sm-6'>
+                    <div className='form-group col-sm-6 col-md-4 col-lg-3'>
                         <label htmlFor='city'>City</label>
                         <input className='form-control' id="city" name="city" />
                     </div>
-                    <div className='form-group col-sm-6'>
+                    <div className='form-group col-sm-6 col-md-4 col-lg-3'>
                         <label htmlFor='state'>State</label>
                         <input className='form-control' id="state" name="state" />
                     </div>
-                    <div className='form-group col-sm-6'>
+                    <div className='form-group col-sm-6 col-md-4 col-lg-3'>
                         <label htmlFor='cuisines'>Cuisines</label>
-                        <input className='form-control' id="cuisines" name="cusines" defaultValue={data.place.cuisines} required />
+                        <input className='form-control' id="cuisines" name="cuisines" defaultValue={place.cuisines} required />
+                    </div>
+                    <div className='form-group col-sm-6 col-md-4 col-lg-3'>
+                        <label htmlFor='founded'>Founded In</label>
+                        <input className='founded' id='founded' name='founded' />
                     </div>
                     <input className='btn btn-primary' type="submit" value="Add Place" />
                     </div>
@@ -36,4 +40,4 @@ function edit_form(data){
     )
 }
 
-module.exports = edit_form
+module.exports = EditForm
