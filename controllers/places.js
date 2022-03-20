@@ -9,12 +9,15 @@ router.get('/new', (req, res) => {
 
 //POST /places
 router.post('/', (req, res) => {
-    console.log(req.body);
     db.Place.create(req.body).then(() => {
         res.redirect('/places');
     }).catch(err => {
-        console.log('err', err);
-        res.render('error404');
+        if(err && err.name == 'ValidationError'){
+            let message = 'Validation Error: This year is either in the future or WAY too far in the past'
+            res.render('places/new', { message, body });
+        } else{
+            res.render('error404');
+        }
     });
 })
 
