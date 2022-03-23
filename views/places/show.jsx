@@ -39,6 +39,22 @@ function show(data) {
                 <h2>Comments</h2>
                 <h3>{comments}</h3>
                 </div>
+                <form method='POST' action={`/places/${data.id}`}>
+                    <h2>Got Your Own Rant or Rave?</h2>
+                    <div>
+                    <label htmlFor='content'>Content</label>
+                    <input type='textarea' id='content' name='content' />
+                    </div>
+                    <div>
+                        <label htmlFor='author'>Author</label>
+                        <input type='text' id='author' name='author' />
+                        <label htmlFor='stars'>Star Rating</label>
+                        <input type='range' min='1' max='5' step='0.5' name='stars' id='stars' />
+                        <label htmlFor='rant'>Rant?</label>
+                        <input type='checkbox' id='rant' name='rant' />
+                    </div>
+                    <input className='btn btn-primary' type="submit" value="Add Comment" />
+                </form>
             </main>
         </Def>
     )

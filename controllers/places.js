@@ -21,6 +21,30 @@ router.post('/', (req, res) => {
     });
 })
 
+//POST comments
+router.post('/:id', (req, res) => {
+    console.log(req.body)
+    req.body.rant = req.body.rant ? true : false
+    let id = Number(req.params.id)
+    if(isNaN(id)){
+        console.log('ID must be a number')
+    }
+    db.Place.findById(req.params.id).then(place => {
+        db.Comment.create(req.body).then(comment => {
+            place.comments.push(comment.id)
+            place.save().then(() => {
+                res.redirect(`/places/${req.params.id}`)
+            })
+        }).catch(err => {
+            console.log('error 1')
+            res.render('error404')
+        })
+    }).catch(err => {
+        console.log('error 2')
+        res.render('error404')
+    })
+})
+
 //EDIT places
 /*router.get('/:id/edit', (req, res) => {
     let id = Number(req.params.id);
@@ -58,7 +82,6 @@ router.post('/', (req, res) => {
 //GET /places
 router.get('/:id', (req, res) => {
     db.Place.findById(req.params.id).populate('comments').then(place => {
-        console.log(place.comments)
         res.render('places/show', { place })
     }).catch(err => {
         console.log('err', err);
