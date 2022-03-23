@@ -57,7 +57,8 @@ router.post('/', (req, res) => {
 
 //GET /places
 router.get('/:id', (req, res) => {
-    db.Place.findById(req.params.id).then(place => {
+    db.Place.findById(req.params.id).populate('comments').then(place => {
+        console.log(place.comments)
         res.render('places/show', { place })
     }).catch(err => {
         console.log('err', err);
