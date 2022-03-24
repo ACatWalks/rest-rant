@@ -1,12 +1,12 @@
 const React = require('react');
 const Def = require('../default');
 
-function EditForm({ place, id }){
+function EditForm({ place }){
     return (
         <Def>
             <main>
                 <h1>Edit Place</h1>
-                <form method="POST" action={`/places/${id}/edit?_method=PUT`}>
+                <form method="POST" action={`/places/${place.place.id}/edit?_method=PUT`}>
                     <div className='row'>
                     <div className='form-group col-sm-6 col-md-4 col-lg-3'>
                         <label htmlFor='name'>Place Name</label>
@@ -30,9 +30,9 @@ function EditForm({ place, id }){
                     </div>
                     <div className='form-group col-sm-6 col-md-4 col-lg-3'>
                         <label htmlFor='founded'>Founded In</label>
-                        <input className='founded' id='founded' name='founded' />
+                        <input className='form-control' id='founded' name='founded' defaultValue={place.place.founded}/>
                     </div>
-                    <input className='btn btn-primary' type="submit" value="Add Place" />
+                    <input className='btn btn-primary' type="submit" value="Update Place" />
                     </div>
                 </form>
             </main>

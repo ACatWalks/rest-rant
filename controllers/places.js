@@ -48,21 +48,14 @@ router.post('/:id', (req, res) => {
 //EDIT places
 router.get('/:id/edit', (req, res) => {
     db.Place.findById(req.params.id).then(foundPlace => {
-        res.render('edit', {
-            place: foundPlace,
-            id: req.params.id
-        })
+        res.render('places/edit', { place })
+    }).catch(err => {
+        res.render('error404')
     })
 })
 
 //PUT places
 router.put('/:id/edit', (req, res) => {
-    let id = Number(req.params.id);
-    if(isNaN(id)){
-        res.render('error404');
-    } else if(!places[id]){
-        res.render('error404');
-    } else{
         if(!req.body.pic){
             req.body.pic = 'http://placekitten.com/400/400'
         }
@@ -72,11 +65,12 @@ router.put('/:id/edit', (req, res) => {
         if(!req.body.state){
             req.body.state = 'USA'
         }
-        db.Place.findByIdAndUpdate(req.params.id, req.body, {new: true}).then(updatedPlace => {
-            console.log(updatedPlace)
-            res.redirect(`/places/${id}`);
+        db.Place.findByIdAndUpdate(req.params.id, req.body).then(() => {
+            res.redirect(`/places/${re.params.id}`);
+        }).catch(err => {
+            console.log('err', err)
+            res.render('error404')
         })  
-    }
 })
 
 //GET /places
@@ -93,7 +87,10 @@ router.get('/:id', (req, res) => {
 //DELETE places
 router.delete('/places/:id', (req, res) => {
     db.Place.findByIdAndDelete(req.params.id).then(deletedPlace => {
-        res.status(303).redirect('places')
+        res.redirect('/places')
+    }).catch(err => {
+        console.log(err)
+        res.render('error404')
     })
   })
 
