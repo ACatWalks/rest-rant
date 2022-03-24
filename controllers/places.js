@@ -14,7 +14,7 @@ router.post('/', (req, res) => {
     }).catch(err => {
         if(err && err.name == 'ValidationError'){
             let message = 'Validation Error: This year is either in the future or WAY too far in the past'
-            res.render('places/new', { message, body });
+            res.render('places/new', {message, body});
         } else{
             res.render('error404');
         }
@@ -46,19 +46,17 @@ router.post('/:id', (req, res) => {
 })
 
 //EDIT places
-/*router.get('/:id/edit', (req, res) => {
-    let id = Number(req.params.id);
-    if(isNaN(id)){
-        res.render('error404');
-    } else if(!places[id]){
-        res.render('error404');
-    } else{
-        res.render('places/edit', { place: places[id], id });
-    }
-})*/
+router.get('/:id/edit', (req, res) => {
+    db.Place.findById(req.params.id).then(foundPlace => {
+        res.render('edit', {
+            place: foundPlace,
+            id: req.params.id
+        })
+    })
+})
 
 //PUT places
-/*router.put('/:id/edit', (req, res) => {
+router.put('/:id/edit', (req, res) => {
     let id = Number(req.params.id);
     if(isNaN(id)){
         res.render('error404');
@@ -74,15 +72,18 @@ router.post('/:id', (req, res) => {
         if(!req.body.state){
             req.body.state = 'USA'
         }
-        places[id] = req.body;
-        res.redirect(`/places/${id}`);
+        db.Place.findByIdAndUpdate(req.params.id, req.body, {new: true}).then(updatedPlace => {
+            console.log(updatedPlace)
+            res.redirect(`/places/${id}`);
+        })  
     }
-})*/
+})
 
 //GET /places
 router.get('/:id', (req, res) => {
     db.Place.findById(req.params.id).populate('comments').then(place => {
-        res.render('places/show', { place })
+        console.log(place)
+        res.render('places/show', {place})
     }).catch(err => {
         console.log('err', err);
         res.render('error404');
@@ -90,24 +91,16 @@ router.get('/:id', (req, res) => {
 })
 
 //DELETE places
-/*router.delete('/places/:id', (req, res) => {
-    let id = Number(req.params.id)
-    if (isNaN(id)) {
-      res.render('error404')
-    }
-    else if (!places[id]) {
-      res.render('error404')
-    }
-    else {
-      places.splice(id, 1)
-      res.redirect('/places')
-    }
-  })*/
+router.delete('/places/:id', (req, res) => {
+    db.Place.findByIdAndDelete(req.params.id).then(deletedPlace => {
+        res.status(303).redirect('places')
+    })
+  })
 
 //HOME route
 router.get('/', (req, res) => {
     db.Place.find().then(places => {
-        res.render('places/index', { places })
+        res.render('places/index', {places})
     }).catch(err => {
         console.log(err);
         res.render('error404');
