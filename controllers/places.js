@@ -2,9 +2,14 @@ const router = require('express').Router();
 const db = require('../models');
 const places = require('../models/places.js');
 
-//New route
-router.get('/new', (req, res) => {
-    res.render('places/new');
+//HOME route
+router.get('/', (req, res) => {
+    db.Place.find().then(places => {
+        res.render('places/index', {places})
+    }).catch(err => {
+        console.log(err);
+        res.render('error404');
+    })
 })
 
 //POST /places
@@ -21,14 +26,67 @@ router.post('/', (req, res) => {
     });
 })
 
+//New route
+router.get('/new', (req, res) => {
+    res.render('places/new');
+})
+
+//GET /places
+router.get('/:id', (req, res) => {
+    db.Place.findById(req.params.id).populate('comments').then(place => {
+        console.log(place)
+        res.render('places/show', {place})
+    }).catch(err => {
+        console.log('err', err);
+        res.render('error404');
+    })
+})
+
+//PUT places
+router.put('/:id/edit', (req, res) => {
+    if(!req.body.pic){
+        req.body.pic = 'http://placekitten.com/400/400'
+    }
+    if(!req.body.city){
+        req.body.city = 'Anytown'
+    }
+    if(!req.body.state){
+        req.body.state = 'USA'
+    }
+    db.Place.findByIdAndUpdate(req.params.id, req.body).then(() => {
+        res.redirect(`/places/${req.params._id}`);
+    }).catch(err => {
+        console.log('err', err)
+        res.render('error404')
+    })  
+})
+
+
+
+//DELETE places
+router.delete('/places/:id', (req, res) => {
+db.Place.findByIdAndDelete(req.params.id).then(() => {
+    res.redirect('/places')
+}).catch(err => {
+    console.log(err)
+    res.render('error404')
+})
+})
+
+//EDIT places
+router.get('/:id/edit', (req, res) => {
+    db.Place.findById(req.params.id).then(foundPlace => {
+        res.render('places/edit', { place })
+    }).catch(err => {
+        res.render('error404')
+    })
+})
+
 //POST comments
 router.post('/:id', (req, res) => {
     console.log(req.body)
+    if(req.body.author === '') {req.body.author = undefined}
     req.body.rant = req.body.rant ? true : false
-    let id = Number(req.params.id)
-    if(isNaN(id)){
-        console.log('ID must be a number')
-    }
     db.Place.findById(req.params.id).then(place => {
         db.Comment.create(req.body).then(comment => {
             place.comments.push(comment.id)
@@ -45,62 +103,14 @@ router.post('/:id', (req, res) => {
     })
 })
 
-//EDIT places
-router.get('/:id/edit', (req, res) => {
-    db.Place.findById(req.params.id).then(foundPlace => {
-        res.render('places/edit', { place })
-    }).catch(err => {
-        res.render('error404')
-    })
-})
-
-//PUT places
-router.put('/:id/edit', (req, res) => {
-        if(!req.body.pic){
-            req.body.pic = 'http://placekitten.com/400/400'
-        }
-        if(!req.body.city){
-            req.body.city = 'Anytown'
-        }
-        if(!req.body.state){
-            req.body.state = 'USA'
-        }
-        db.Place.findByIdAndUpdate(req.params.id, req.body).then(() => {
-            res.redirect(`/places/${re.params.id}`);
-        }).catch(err => {
-            console.log('err', err)
-            res.render('error404')
-        })  
-})
-
-//GET /places
-router.get('/:id', (req, res) => {
-    db.Place.findById(req.params.id).populate('comments').then(place => {
-        console.log(place)
-        res.render('places/show', {place})
-    }).catch(err => {
-        console.log('err', err);
-        res.render('error404');
-    })
-})
-
-//DELETE places
-router.delete('/places/:id', (req, res) => {
-    db.Place.findByIdAndDelete(req.params.id).then(deletedPlace => {
-        res.redirect('/places')
+//DELETE comments
+router.delete('/:id/comment/:commentId', (req, res) => {
+    db.Comment.findByIdAndDelete(req.params.commentId).then(() => {
+        console.log('Success!')
+        res.redirect(`/places/${req.params.id}`)
     }).catch(err => {
         console.log(err)
         res.render('error404')
-    })
-  })
-
-//HOME route
-router.get('/', (req, res) => {
-    db.Place.find().then(places => {
-        res.render('places/index', {places})
-    }).catch(err => {
-        console.log(err);
-        res.render('error404');
     })
 })
 
