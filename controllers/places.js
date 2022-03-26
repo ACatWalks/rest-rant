@@ -14,6 +14,15 @@ router.get('/', (req, res) => {
 
 //POST /places
 router.post('/', (req, res) => {
+    if(!req.body.city){
+        req.body.city = 'Anytown'
+    }
+    if(!req.body.state){
+        req.body.state = 'USA'
+    }
+    if(!req.body.pic){
+        req.body.pic = 'http://placekitten.com/350/350'
+    }
     db.Place.create(req.body).then(() => {
         res.redirect('/places');
     }).catch(err => {
@@ -54,7 +63,7 @@ router.put('/:id/edit', (req, res) => {
         req.body.state = 'USA'
     }
     db.Place.findByIdAndUpdate(req.params.id, req.body).then(() => {
-        res.redirect(`/places/${req.params._id}`);
+        res.redirect(`/places/${req.params.id}`);
     }).catch(err => {
         console.log('err', err)
         res.render('error404')
@@ -75,9 +84,12 @@ db.Place.findByIdAndDelete(req.params.id).then(() => {
 
 //EDIT places
 router.get('/:id/edit', (req, res) => {
+    console.log(req.params.id)
     db.Place.findById(req.params.id).then(foundPlace => {
-        res.render('places/edit', { place })
+        res.render('places/edit', {place: foundPlace})
     }).catch(err => {
+        console.log(err)
+        console.log('Caught in edit route')
         res.render('error404')
     })
 })
